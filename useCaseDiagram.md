@@ -5,7 +5,7 @@ usecaseDiagram
     actor User as "Authenticated User"
     actor Admin as "Project Manager/Admin"
 
-    package "AgileFlow System" {
+    subgraph AgileFlow_System [AgileFlow System]
         usecase "Login / Register" as UC1
         usecase "Manage User Profile" as UC2
         
@@ -18,7 +18,7 @@ usecaseDiagram
         usecase "Move Task (Update Status)" as UC8
         usecase "View Project Dashboard" as UC9
         usecase "Add Comments on Task" as UC10
-    }
+    end
 
     User <|-- Admin
 
