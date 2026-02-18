@@ -1,7 +1,7 @@
 # Use Case Diagram
 
 ```mermaid
-useCaseDiagram
+usecaseDiagram
     actor User as "Authenticated User"
     actor Admin as "Project Manager/Admin"
 
