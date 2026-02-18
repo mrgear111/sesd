@@ -1,23 +1,28 @@
 # Use Case Diagram
 
 ```mermaid
-usecaseDiagram
-    actor User
-    actor Admin
+flowchart LR
+    %% Actors
+    User["👤 Authenticated User"]
+    Admin["👤 Project Manager/Admin"]
 
-    package "AgileFlow System" {
-        usecase "Login / Register" as UC1
-        usecase "Manage User Profile" as UC2
-        usecase "Create Project" as UC3
-        usecase "Manage Project Settings" as UC4
-        usecase "Invite Members" as UC5
-        usecase "Create Task" as UC6
-        usecase "Edit Task Details" as UC7
-        usecase "Move Task" as UC8
-        usecase "View Dashboard" as UC9
-        usecase "Add Comments" as UC10
-    }
+    %% System Boundary
+    subgraph AgileFlow_System ["AgileFlow System"]
+        direction TB
+        UC1(["Login / Register"])
+        UC2(["Manage User Profile"])
+        UC9(["View Dashboard"])
+        UC3(["Create Project"])
+        UC4(["Manage Project Settings"])
+        UC5(["Invite Members"])
+        UC6(["Create Task"])
+        UC7(["Edit Task Details"])
+        UC8(["Move Task"])
+        UC10(["Add Comments"])
+    end
 
+    %% Relationships
+    %% User Connections
     User --> UC1
     User --> UC2
     User --> UC9
@@ -26,9 +31,11 @@ usecaseDiagram
     User --> UC8
     User --> UC10
 
+    %% Admin Connections (includes User functions + extra)
     Admin --> UC3
     Admin --> UC4
     Admin --> UC5
-
-    User <|-- Admin
+    
+    %% Representing Inheritance (Admin is a User)
+    Admin -.->|is a| User
 ```
