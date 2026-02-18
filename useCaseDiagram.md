@@ -2,25 +2,21 @@
 
 ```mermaid
 usecaseDiagram
-    actor User as "Authenticated User"
-    actor Admin as "Project Manager/Admin"
+    actor User
+    actor Admin
 
-    subgraph AgileFlow_System [AgileFlow System]
+    package "AgileFlow System" {
         usecase "Login / Register" as UC1
         usecase "Manage User Profile" as UC2
-        
         usecase "Create Project" as UC3
         usecase "Manage Project Settings" as UC4
         usecase "Invite Members" as UC5
-        
         usecase "Create Task" as UC6
         usecase "Edit Task Details" as UC7
-        usecase "Move Task (Update Status)" as UC8
-        usecase "View Project Dashboard" as UC9
-        usecase "Add Comments on Task" as UC10
-    end
-
-    User <|-- Admin
+        usecase "Move Task" as UC8
+        usecase "View Dashboard" as UC9
+        usecase "Add Comments" as UC10
+    }
 
     User --> UC1
     User --> UC2
@@ -33,4 +29,6 @@ usecaseDiagram
     Admin --> UC3
     Admin --> UC4
     Admin --> UC5
+
+    User <|-- Admin
 ```
