@@ -78,6 +78,7 @@ class App {
       database: process.env.DB_NAME || 'agile_dashboard',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
+      ssl: process.env.DB_SSL === 'true'
     };
 
     const pool = DatabaseConnection.getInstance(dbConfig);

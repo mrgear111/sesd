@@ -9,6 +9,7 @@ export interface DatabaseConfig {
   database: string;
   user: string;
   password: string;
+  ssl?: boolean;
 }
 
 /**
@@ -41,7 +42,11 @@ export class DatabaseConnection {
         min: 2,                      // Minimum number of connections in pool
         max: 10,                     // Maximum number of connections in pool
         idleTimeoutMillis: 30000,    // Close idle connections after 30 seconds
-        connectionTimeoutMillis: 5000 // Timeout after 5 seconds if no connection available
+        connectionTimeoutMillis: 5000, // Timeout after 5 seconds if no connection available
+        // SSL configuration for cloud databases (Neon, AWS RDS, etc.)
+        ssl: config.ssl ? {
+          rejectUnauthorized: false
+        } : false
       };
 
       DatabaseConnection.instance = new Pool(poolConfig);

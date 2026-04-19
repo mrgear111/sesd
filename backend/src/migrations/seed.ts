@@ -1,6 +1,7 @@
 import { Pool } from 'pg';
 import * as bcrypt from 'bcrypt';
 import { DatabaseConnection } from '../config/database';
+import 'dotenv/config';
 
 /**
  * Seed data script for development environment
@@ -288,7 +289,8 @@ async function main() {
     port: parseInt(process.env.DB_PORT || '5432'),
     database: process.env.DB_NAME || 'agile_dashboard',
     user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || 'postgres'
+    password: process.env.DB_PASSWORD || 'postgres',
+    ssl: process.env.DB_SSL === 'true'
   };
 
   console.log('Database configuration:');

@@ -58,6 +58,10 @@ export class UserController {
    */
   async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      if (!req.user) {
+        res.status(401).json({ message: 'Unauthorized' });
+        return;
+      }
       const user = await this.userRepo.findById(req.user.id);
       if (!user) {
         res.status(404).json({ message: 'User not found' });
