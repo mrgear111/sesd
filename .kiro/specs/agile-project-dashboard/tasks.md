@@ -49,27 +49,27 @@ This implementation plan follows a 15-commit roadmap to build a full-stack Agile
 
 ### Phase 2: Core Infrastructure
 
-- [ ] 4. Repository layer implementation
-  - [ ] 4.1 Create repository interfaces and UserRepository
+- [x] 4. Repository layer implementation
+  - [x] 4.1 Create repository interfaces and UserRepository
     - Define `IUserRepository` interface with methods: findById, findByEmail, create, exists
     - Implement `UserRepository` class with constructor accepting Pool, implement all interface methods using parameterized SQL queries
     - Add private `mapToUser` method to convert database rows to User domain objects
     - _Requirements: 1.4 (create user record), 2.1 (retrieve user by email), 3.1 (verify user), 5.4 (verify user exists), 8.3 (verify assignee exists)_
 
-  - [ ] 4.2 Implement ProjectRepository
+  - [x] 4.2 Implement ProjectRepository
     - Define `IProjectRepository` interface with methods: findById, findByUserId, create, delete, addMember, isMember, getMemberRole
     - Implement `ProjectRepository` class with all CRUD operations and member management methods
     - Add methods for checking project membership and retrieving user role in project
     - _Requirements: 4.3 (create project), 5.5 (verify not already member), 5.7 (create member record), 8.5 (verify assignee is member)_
 
-  - [ ] 4.3 Implement TaskRepository with filtering
+  - [x] 4.3 Implement TaskRepository with filtering
     - Define `ITaskRepository` interface with methods: findById, findByProjectId (with filters), create, updateStatus, updateAssignee
     - Implement `TaskRepository` class with dynamic query building for filters (workflowId, assigneeId, priority, search)
     - Implement case-insensitive search using ILIKE for title and description fields
     - Add sorting support for created_at, updated_at, priority, due_date
     - _Requirements: 7.6 (create task), 9.8 (update workflow), 8.7 (update assignee), 18 (Task Filtering and Search)_
 
-  - [ ] 4.4 Implement WorkflowRepository, SprintRepository, CommentRepository, AuditLogRepository
+  - [x] 4.4 Implement WorkflowRepository, SprintRepository, CommentRepository, AuditLogRepository
     - Implement `WorkflowRepository` with methods: findById, findByProjectId, create
     - Implement `SprintRepository` with methods: findById, findByProjectId, create, updateState
     - Implement `CommentRepository` with methods: findById, findByTaskId, create
