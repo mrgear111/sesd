@@ -1,45 +1,124 @@
-# Agile Project Dashboard - Agile Project Management Dashboard
+# Agile Project Management Dashboard
 
-> **Milestone 1 Submission** - Idea and Diagrams
+A full-stack web application for agile project management built with Node.js, TypeScript, Express.js, and PostgreSQL.
 
-Agile Project Dashboard is a comprehensive project management dashboard designed to streamline team workflows using Agile methodologies. It empowers teams to organize sprints, track tasks through customizable workflows, and maintain accountability with detailed audit logs.
+## Technology Stack
 
----
+**Backend:**
+- Node.js 18+ with TypeScript 5.0+
+- Express.js 4.18+ for HTTP server
+- PostgreSQL 15+ with pg driver
+- JWT authentication with bcrypt password hashing
+- Jest for testing
 
-## 📂 Project Documentation (Milestone 1)
+**Architecture:**
+- Three-tier architecture (Controllers, Services, Repositories)
+- Repository Pattern for data access
+- Service Layer Pattern for business logic
+- Factory Pattern for object creation
+- Dependency Injection for loose coupling
 
-*   **📄 [Project Idea & Scope](./idea.md)**: Detailed breakdown of features, scope, and objectives.
-*   **Use Case Diagram**: **[View Diagram](./useCaseDiagram.md)** (User/Admin interactions)
-*   **Sequence Diagram**: **[View Diagram](./sequenceDiagram.md)** (Task creation flow)
-*   **Class Diagram**: **[View Diagram](./classDiagram.md)** (Backend OOP Structure)
-*   **ER Diagram**: **[View Diagram](./ErDiagram.md)** (Database Schema)
+## Project Structure
 
----
+```
+src/
+├── controllers/      # HTTP request handlers
+├── services/         # Business logic layer
+├── repositories/     # Data access layer
+├── models/           # Domain entities
+├── dto/              # Data transfer objects
+├── middleware/       # Express middleware
+├── validators/       # Request validation schemas
+├── config/           # Configuration management
+├── utils/            # Utility functions
+├── factories/        # Object creation factories
+├── routes/           # API route definitions
+├── migrations/       # Database migrations
+└── app.ts            # Express app setup
 
-## 🛠 Tech Stack
+tests/
+├── unit/             # Unit tests
+├── integration/      # Integration tests
+└── property/         # Property-based tests
+```
 
-*   **Backend**: Node.js / TypeScript (Express) - *Following OOP Principles (Controller-Service-Repository)*
-*   **Frontend**: React / Next.js
-*   **Database**: PostgreSQL
-*   **Design**: Tailwind CSS
+## Setup Instructions
 
-## 🚀 Getting Started
+### Prerequisites
+- Node.js 18 or higher
+- PostgreSQL 15 or higher
+- npm or yarn
 
-*(Instructions for running the project will be added in the implementation phase)*
+### Installation
 
-1.  Clone the repository:
-    ```bash
-    git clone https://github.com/mrgear111/sesd.git
-    ```
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-3.  Run the development server:
-    ```bash
-    npm run dev
-    ```
+1. Clone the repository:
+```bash
+git clone https://github.com/mrgear111/sesd.git
+cd sesd
+```
 
----
+2. Install dependencies:
+```bash
+npm install
+```
 
-*Use the links above to navigate the specific documentation files for grading.*
+3. Create a `.env` file in the root directory:
+```env
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=agile_dashboard
+DB_USER=postgres
+DB_PASSWORD=your_password
+
+# JWT Configuration
+JWT_SECRET=your_secret_key_here
+JWT_EXPIRATION=24h
+
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+```
+
+4. Run database migrations (coming in next task):
+```bash
+npm run migrate
+```
+
+## Available Scripts
+
+- `npm run dev` - Start development server with hot reload
+- `npm run build` - Build TypeScript to JavaScript
+- `npm start` - Start production server
+- `npm test` - Run test suite
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
+
+## Development
+
+Start the development server:
+```bash
+npm run dev
+```
+
+The server will start on `http://localhost:3000`
+
+## Testing
+
+Run all tests:
+```bash
+npm test
+```
+
+Run tests with coverage:
+```bash
+npm test -- --coverage
+```
+
+## API Documentation
+
+API documentation will be available at `/api-docs` once implemented.
+
+## License
+
+ISC
