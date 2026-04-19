@@ -1,83 +1,42 @@
-import { Request, Response, NextFunction } from 'express';
-
-/**
- * Simple in-memory rate limiter
- * Tracks login attempts per email address
- */
-class RateLimiter {
-  private attempts: Map<string, { count: number; resetTime: number }> = new Map();
-  private maxAttempts: number;
-  private windowMs: number;
-
-  constructor(maxAttempts: number = 5, windowMs: number = 15 * 60 * 1000) {
-    this.maxAttempts = maxAttempts;
-    this.windowMs = windowMs;
-  }
-
-  /**
-   * Check if request should be rate limited
-   */
-  isRateLimited(key: string): boolean {
-    const now = Date.now();
-    const record = this.attempts.get(key);
-
-    if (!record) {
-      this.attempts.set(key, { count: 1, resetTime: now + this.windowMs });
-      return false;
-    }
-
-    if (now > record.resetTime) {
-      // Reset window
-      this.attempts.set(key, { count: 1, resetTime: now + this.windowMs });
-      return false;
-    }
-
-    if (record.count >= this.maxAttempts) {
-      return true;
-    }
-
-    record.count++;
-    return false;
-  }
-
-  /**
-   * Clean up expired entries
-   */
-  cleanup(): void {
-    const now = Date.now();
-    for (const [key, record] of this.attempts.entries()) {
-      if (now > record.resetTime) {
-        this.attempts.delete(key);
-      }
-    }
-  }
-}
-
-// Create rate limiter instance
-const loginRateLimiter = new RateLimiter(5, 15 * 60 * 1000);
-
-// Cleanup expired entries every minute
-setInterval(() => loginRateLimiter.cleanup(), 60 * 1000);
+import rateLimit from 'express-rate-limit';
+import { Request } from 'express';
 
 /**
  * Rate limiting middleware for login endpoint
+ * Limits login attempts to 5 per email address per 15 minutes
  */
-export const loginRateLimit = (req: Request, res: Response, next: NextFunction): void => {
-  const email = req.body.email;
+export const loginRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each email to 5 requests per windowMs
+  message: {
+    error: 'Too Many Requests',
+    message: 'Too many login attempts. Please try again later.',
+    statusCode: 429,
+  },
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  // Use email as the key for rate limiting
+  keyGenerator: (req: Request): string => {
+    return req.body.email || req.ip || 'unknown';
+  },
+  // Skip rate limiting if no email is provided
+  skip: (req: Request): boolean => {
+    return !req.body.email;
+  },
+});
 
-  if (!email) {
-    return next();
-  }
-
-  if (loginRateLimiter.isRateLimited(email)) {
-    res.status(429).json({
-      error: {
-        message: 'Too many login attempts. Please try again later.',
-        statusCode: 429,
-      },
-    });
-    return;
-  }
-
-  next();
-};
+/**
+ * General API rate limiting middleware
+ * Limits all API requests to 100 per IP per 15 minutes
+ */
+export const apiRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: {
+    error: 'Too Many Requests',
+    message: 'Too many requests from this IP. Please try again later.',
+    statusCode: 429,
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});

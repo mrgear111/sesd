@@ -5,7 +5,10 @@ import { RepositoryFactory } from './factories/RepositoryFactory';
 import { ServiceFactory } from './factories/ServiceFactory';
 import { ControllerFactory } from './factories/ControllerFactory';
 import { createApiRoutes } from './routes';
-import { AppError } from './utils/errors';
+import { errorHandler } from './middleware/errorHandler';
+import { requestLogger } from './middleware/requestLogger';
+import { apiRateLimit } from './middleware/rateLimiter';
+import { logger } from './utils/logger';
 
 /**
  * Express application setup
@@ -27,6 +30,12 @@ class App {
    * Initialize Express middleware
    */
   private initializeMiddleware(): void {
+    // Request logging
+    this.app.use(requestLogger);
+
+    // API rate limiting
+    this.app.use('/api', apiRateLimit);
+
     // Parse JSON request bodies
     this.app.use(express.json());
 
@@ -110,34 +119,8 @@ class App {
       });
     });
 
-    // Global error handler
-    this.app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-      console.error('Error:', err);
-
-      // Handle AppError instances
-      if (err instanceof AppError) {
-        res.status(err.statusCode).json({
-          error: err.name,
-          message: err.message,
-        });
-        return;
-      }
-
-      // Handle JWT errors
-      if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
-        res.status(401).json({
-          error: 'Unauthorized',
-          message: 'Invalid or expired token',
-        });
-        return;
-      }
-
-      // Handle unknown errors
-      res.status(500).json({
-        error: 'Internal Server Error',
-        message: 'An unexpected error occurred',
-      });
-    });
+    // Global error handler (must be last)
+    this.app.use(errorHandler);
   }
 
   /**
@@ -145,7 +128,7 @@ class App {
    */
   public listen(): void {
     this.app.listen(this.port, () => {
-      console.log(`Server is running on http://localhost:${this.port}`);
+      logger.info(`Server is running on http://localhost:${this.port}`);
     });
   }
 
@@ -153,9 +136,9 @@ class App {
    * Graceful shutdown
    */
   public async shutdown(): Promise<void> {
-    console.log('Shutting down gracefully...');
+    logger.info('Shutting down gracefully...');
     await DatabaseConnection.close();
-    console.log('Database connection closed');
+    logger.info('Database connection closed');
   }
 }
 

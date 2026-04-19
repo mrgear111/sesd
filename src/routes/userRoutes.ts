@@ -2,6 +2,9 @@ import { Router } from 'express';
 import { UserController } from '../controllers/UserController';
 import { IJWTService } from '../services/IJWTService';
 import { createAuthMiddleware } from '../middleware/authMiddleware';
+import { loginRateLimit } from '../middleware/rateLimiter';
+import { validateBody } from '../middleware/validationMiddleware';
+import { registerSchema, loginSchema } from '../validators/userValidators';
 
 /**
  * User routes
@@ -15,8 +18,18 @@ export const createUserRoutes = (
   const authMiddleware = createAuthMiddleware(jwtService);
 
   // Public routes (no authentication required)
-  router.post('/auth/register', (req, res, next) => userController.register(req, res, next));
-  router.post('/auth/login', (req, res, next) => userController.login(req, res, next));
+  router.post(
+    '/auth/register',
+    validateBody(registerSchema),
+    (req, res, next) => userController.register(req, res, next)
+  );
+  
+  router.post(
+    '/auth/login',
+    loginRateLimit,
+    validateBody(loginSchema),
+    (req, res, next) => userController.login(req, res, next)
+  );
 
   // Protected routes (authentication required)
   router.get('/users/me', authMiddleware, (req, res, next) =>
