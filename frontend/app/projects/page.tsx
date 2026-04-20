@@ -208,8 +208,9 @@ export default function ProjectsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project) => (
-              <div
+              <Link
                 key={project.id}
+                href={`/projects/${project.id}`}
                 className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6 hover:bg-white/15 transition-all transform hover:scale-105 cursor-pointer group"
               >
                 <div className="flex items-start justify-between mb-4">
@@ -231,7 +232,7 @@ export default function ProjectsPage() {
                 <div className="flex items-center justify-between pt-4 border-t border-white/10">
                   <span className="text-xs text-blue-200">View Details →</span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
