@@ -153,7 +153,7 @@ We'll set this in Vercel dashboard in the next steps.
 
 **Framework Preset**: Next.js (auto-detected)
 
-**Root Directory**: `frontend`
+**Root Directory**: Click "Edit" and set to `frontend`
 
 **Build Settings** (usually auto-detected):
 - **Build Command**: `npm run build`

@@ -15,10 +15,13 @@ class ApiClient {
 
   private async request(endpoint: string, options: RequestInit = {}) {
     const token = this.getToken();
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...options.headers,
     };
+
+    if (options.headers) {
+      Object.assign(headers, options.headers);
+    }
 
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
