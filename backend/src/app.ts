@@ -42,11 +42,32 @@ class App {
     // Parse URL-encoded request bodies
     this.app.use(express.urlencoded({ extended: true }));
 
-    // CORS middleware (allow all origins for development)
+    // CORS middleware - Updated for production
     this.app.use((_req: Request, res: Response, next: NextFunction) => {
-      res.header('Access-Control-Allow-Origin', '*');
+      const allowedOrigins = [
+        'https://sesd-nine.vercel.app',    // Your Vercel frontend
+        'http://localhost:3000',           // Local development
+        'http://localhost:3001'            // Local development (alternate port)
+      ];
+      
+      const origin = _req.headers.origin;
+      if (origin && allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+      } else if (!origin) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        res.header('Access-Control-Allow-Origin', '*');
+      }
+      
       res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
       res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+      res.header('Access-Control-Allow-Credentials', 'true');
+      
+      // Handle preflight requests
+      if (_req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+      }
+      
       next();
     });
   }
